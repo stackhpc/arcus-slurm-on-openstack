@@ -4,19 +4,6 @@
   become: yes
   tasks:
   - include_role:
-      name: stackhpc.openhpc
-    vars:
-      openhpc_cluster_name: "jg"
-      openhpc_slurm_control_host: "{{ groups['login'] | first }}"
-      openhpc_slurm_partitions:
-        - compute:
-            name: "batch"
-            num_nodes: 1
-      openhpc_enable:
-         control: "{{ inventory_hostname in groups['login'] }}"
-         batch: "{{ inventory_hostname in groups['computes'] }}"
-         runtime: true
-  - include_role:
       name: stackhpc.nfs
     vars:
       nfs_enable:
@@ -25,3 +12,15 @@
       nfs_server: "{{ groups['login'] | first }}"
       nfs_export: "/export/nfs"
       nfs_client_mnt_point: "/mnt/nfs"
+  - include_role:
+      name: stackhpc.openhpc
+    vars:
+      openhpc_cluster_name: "jg"
+      openhpc_slurm_control_host: "{{ groups['login'] | first }}"
+      openhpc_slurm_partitions:
+        - batch:
+          name: "batch"
+      openhpc_enable:
+         control: "{{ inventory_hostname in groups['login'] }}"
+         batch: "{{ inventory_hostname in groups['computes'] }}"
+         runtime: true
