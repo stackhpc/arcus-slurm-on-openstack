@@ -1,0 +1,5 @@
+
+# This file is all the variables needed by terraform to set up the cluster infra.
+
+cloud:
+    name: alaska # name in clouds.yaml
