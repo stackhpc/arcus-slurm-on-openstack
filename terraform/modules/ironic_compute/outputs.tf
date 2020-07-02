@@ -1,3 +1,3 @@
-output controller_addresses {
-  value = openstack_containerinfra_cluster_v1.cluster.master_addresses
+output computes {
+  value = openstack_compute_instance_v2.compute
 }

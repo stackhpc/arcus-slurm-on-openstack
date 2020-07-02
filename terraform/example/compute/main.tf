@@ -6,13 +6,12 @@ provider "local" {
   version = "~> 1.4"
 }
 
-
 locals {
-  config = yamldecode(file("../deploy.yml"))
+  config = yamldecode(file("../config.yml"))
 }
 
-module "cluster" {
+module "ironic_compute" {
   source = "../../modules/ironic_compute"
 
-  os_cloud = local.config.cloud.name
+  cluster_name = "jg"
 }

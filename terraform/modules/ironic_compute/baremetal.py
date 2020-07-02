@@ -24,15 +24,39 @@ import sys, json, pprint
 import openstack
 import pprint
 
-if len(sys.argv) == 1: # using from terraform
-    query = json.load(sys.stdin)
-else:
-    query = dict(zip(('cloud', 'resource_class', 'cluster', 'value', 'num_nodes'), sys.argv[1:]))
-    pprint.pprint(query)
+#if len(sys.argv) == 1: # using from terraform
+#    query = json.load(sys.stdin)
+#else:
+#    query = dict(zip(('cloud', 'resource_class', 'cluster', 'value', 'num_nodes'), sys.argv[1:]))
+#    pprint.pprint(query)
 
-num_nodes = int(query['num_nodes'])
-conn = openstack.connection.from_config(cloud=query['cloud'])
-nodes = list(conn.baremetal.nodes(details=True, resource_class=query['resource_class']))
+#num_nodes = int(query['num_nodes'])
+
+def find_baremetal_uuids(conn, names):
+    resource_class = "COMPUTE_A"
+    nodes = list(conn.baremetal.nodes(resource_class=resource_class))
+    found = []
+    for node in nodes:
+        if node.name in hostnames:
+            # pprint.pprint(node)
+            found.append({
+               "uuid": node["id"],
+               "name": node["name"],
+               "instance_uuid": node["instance_id"],
+            })
+    # pprint.pprint(found)
+    return found
+
+conn = openstack.connection.from_config(cloud="p3")
+hostnames = ["sv-b17-u37"]
+found = find_baremetal_uuids(conn, hostnames)
+
+result = {}
+for node in found:
+    result[node["name"]] = node["uuid"]
+print(json.dumps(result))
+exit(0)
+
 free_nodes = []
 existing_nodes = []
 for node in nodes:

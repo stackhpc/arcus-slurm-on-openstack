@@ -5,33 +5,27 @@ terraform {
 # https://www.terraform.io/docs/providers/openstack/index.html
 # uses clouds.yml
 provider "openstack" {
-  cloud = local.config.cloud.name
-  version = "1.29"
+  cloud = "p3"
+  version = "~> 1.29"
 }
 
 provider "external" {
   version = "~> 1.2"
 }
 
-
-locals {
-  config = yamldecode(file("../config/deploy.yml"))
-  tf_dir = "${data.external.tf_control_hostname.result.hostname}:${path.cwd}"
-}
-
 resource "openstack_compute_instance_v2" "compute" {
 
   for_each = data.external.openstack_baremetal.result
 
-  name = "${local.config.cluster.name}-${local.config.cluster.compute.name}-${each.key}"
-  image_name = local.config.cluster.compute.image
-  flavor_name = local.config.cluster.compute.flavor
-  key_pair = local.config.cluster.keypair
-  config_drive = local.config.cluster.compute.config_drive
+  name = "${var.cluster_name}-${each.key}"
+  image_name = "CentOS7.8-OpenHPC"
+  flavor_name = "compute-A"
+  key_pair = "usual"
+  config_drive = true
   availability_zone = "nova::${each.value}" # TODO: availability zone should probably be from config too?s
 
   dynamic "network" {
-    for_each = local.config.cluster.compute.networks
+    for_each = ["ilab"]
 
     content {
       name = network.value
@@ -39,8 +33,7 @@ resource "openstack_compute_instance_v2" "compute" {
   }
 
   metadata = {
-    "terraform directory" = local.tf_dir,
-    "cluster" = local.config.cluster.name
+    "cluster" = var.cluster_name
   }
 }
 
@@ -48,7 +41,6 @@ resource "openstack_compute_instance_v2" "compute" {
 resource "local_file" "hosts" {
   content  = templatefile("${path.module}/inventory_compute.tpl",
                           {
-                            "config":local.config,
                             "computes":openstack_compute_instance_v2.compute,
                           },
                           )
