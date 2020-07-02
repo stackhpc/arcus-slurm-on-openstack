@@ -14,3 +14,11 @@ compute:
     hostname_pattern: "sv-b17-u37"
     hostname_prefix: "jg-"
 
+controller:
+    vm_count: 1
+    hostname_prefix: "jg-login-"
+    image_name: "CentOS7.8-OpenHPC"
+    flavor_name: "general.v1.tiny"
+    key_pair: "usual"
+    networks:
+     - "ilab"

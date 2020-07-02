@@ -32,9 +32,9 @@ variable "networks" {
   type = list(string)
 }
 
-variable "hostname_pattern" {
-  description = "Hostname pattern for all computes"
-  type = string
+variable "vm_count" {
+  description = "Number of vms to create"
+  type = number
 }
 
 #
@@ -44,7 +44,7 @@ variable "hostname_pattern" {
 variable "inventory_location" {
    description = "location of generated inventory"
    type = string
-   default = "../inventory/compute"
+   default = "../inventory/controller"
 }
 
 variable "availability_zone" {
@@ -56,5 +56,5 @@ variable "availability_zone" {
 variable "hostname_prefix" {
   description = "Add a prefix to supplied hostname pattern"
   type = string
-  default = ""
+  default = "vm"
 }

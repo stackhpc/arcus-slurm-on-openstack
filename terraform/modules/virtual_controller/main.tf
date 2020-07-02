@@ -2,29 +2,24 @@ terraform {
   required_version = ">= 0.12, < 0.13"
 }
 
-# https://www.terraform.io/docs/providers/openstack/index.html
-# uses clouds.yml
 provider "openstack" {
-  cloud = local.config.cloud.name
-  version = "~> 1.25"
+  cloud = var.os_cloud
+  version = "~> 1.29"
 }
 
-locals {
-  config = yamldecode(file("../config/deploy.yml"))
-}
+resource "openstack_compute_instance_v2" "vms" {
 
-resource "openstack_compute_instance_v2" "login" {
+  count = var.vm_count
 
-  count = local.config.cluster.login.num_nodes
-
-  name = "${local.config.cluster.name}-login-${count.index}"
-  image_name = local.config.cluster.login.image
-  flavor_name = local.config.cluster.login.flavor
-  key_pair = local.config.cluster.keypair
-  config_drive = local.config.cluster.login.config_drive
+  name = "${var.hostname_prefix}${count.index}"
+  image_name = var.image_name
+  flavor_name = var.flavor_name
+  key_pair = var.key_pair
+  config_drive = true
+  availability_zone = var.availability_zone
 
   dynamic "network" {
-    for_each = local.config.cluster.login.networks
+    for_each = var.networks
 
     content {
       name = network.value
@@ -32,20 +27,14 @@ resource "openstack_compute_instance_v2" "login" {
   }
   
   metadata = {
-    "terraform directory" = local.tf_dir,
-    "cluster" = local.config.cluster.name
+    "cluster" = var.cluster_name
   }
 }
-
 
 # TODO: probably needs fixing for multiple control/login nodes
 # TODO: needs fixing for case where creation partially fails resulting in "compute.network is empty list of object"
 resource "local_file" "hosts" {
-  content  = templatefile("${path.module}/inventory_head.tpl",
-                          {
-                            "config":local.config,
-                            "logins":openstack_compute_instance_v2.login,
-                          },
-                          )
-  filename = "${path.module}/../inventory/main"
+  content  = templatefile("${path.module}/inventory.tpl",
+                          {"logins": openstack_compute_instance_v2.vms})
+  filename = var.inventory_location
 }
