@@ -20,6 +20,9 @@
       openhpc_slurm_partitions:
         - batch:
           name: "batch"
+      openhpc_slurm_conf:
+         location: /mnt/nfs/etc/slurm/slurm.conf
+         shared_fs: true
       openhpc_enable:
          control: "{{ inventory_hostname in groups['login'] }}"
          batch: "{{ inventory_hostname in groups['computes'] }}"
