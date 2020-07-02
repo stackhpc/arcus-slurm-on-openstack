@@ -1,5 +1,13 @@
 
 # This file is all the variables needed by terraform to set up the cluster infra.
 
-cloud:
-    name: alaska # name in clouds.yaml
+os_cloud: p3 # name in clouds.yaml
+
+cluster_name: "jg"
+
+compute:
+    image_name: "CentOS7.8-OpenHPC"
+    flavor_name: "compute-A"
+    key_pair: "usual"
+    networks:
+     - "ilab"

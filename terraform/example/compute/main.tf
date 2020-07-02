@@ -13,5 +13,10 @@ locals {
 module "ironic_compute" {
   source = "../../modules/ironic_compute"
 
-  cluster_name = "jg"
+  os_cloud = local.config.os_cloud
+  cluster_name = local.config.cluster_name
+  image_name = local.config.compute.image_name
+  flavor_name = local.config.compute.flavor_name
+  key_pair = local.config.compute.key_pair
+  networks = local.config.compute.networks
 }
