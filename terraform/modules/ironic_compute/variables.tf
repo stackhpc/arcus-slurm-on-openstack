@@ -52,3 +52,9 @@ variable "availability_zone" {
   type = string
   default = "nova"
 }
+
+variable "hostname_suffix" {
+  description = "Add a suffix to supplied hostname pattern"
+  type = string
+  default = ""
+}
