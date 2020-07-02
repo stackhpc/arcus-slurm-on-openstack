@@ -1,5 +1,14 @@
 ---
-- hosts: all
+- name: Deploy nfs
+  hosts: all
+  become: yes
   tasks:
-    - import_role:
-        name: ohpc-packages
+  - include_role:
+      name: stackhpc.nfs
+    vars:
+      nfs_enable:
+        server: "{{ inventory_hostname in groups['login'] | first }}"
+        clients: true
+      nfs_server: "{{ groups['login'] | first }}"
+      nfs_export: "/export/nfs"
+      nfs_client_mnt_point: "/mnt/nfs"
