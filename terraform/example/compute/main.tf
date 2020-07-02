@@ -20,5 +20,5 @@ module "ironic_compute" {
   key_pair = local.config.compute.key_pair
   networks = local.config.compute.networks
   hostname_pattern = local.config.compute.hostname_pattern
-  hostname_suffix = local.config.compute.hostname_suffix
+  hostname_prefix = local.config.compute.hostname_prefix
 }
