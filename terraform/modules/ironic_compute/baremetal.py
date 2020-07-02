@@ -39,6 +39,7 @@ def get_config():
                sys.argv[1:]))
         config["debug"] = True
         pprint.pprint(config)
+    return config
 
 
 def get_hostnames(host_pattern):

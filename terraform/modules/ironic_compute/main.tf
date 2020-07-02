@@ -41,5 +41,5 @@ resource "openstack_compute_instance_v2" "compute" {
 resource "local_file" "hosts" {
   content  = templatefile("${path.module}/inventory_compute.tpl",
                           {"computes": openstack_compute_instance_v2.compute})
-  filename = "var.inventory_location"
+  filename = var.inventory_location
 }
