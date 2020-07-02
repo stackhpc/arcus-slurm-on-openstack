@@ -8,11 +8,11 @@ provider "local" {
 
 
 locals {
-  config = yamldecode(file("../deploy.yml"))
+  config = yamldecode(file("../config.yml"))
 }
 
-module "cluster" {
-  source = "../modules/ironic_compute"
+module "virtual_controller" {
+  source = "../../modules/virtual_controller"
 
   os_cloud = local.config.cloud.name
 }
