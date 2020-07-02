@@ -12,3 +12,12 @@
       nfs_server: "{{ groups['login'] | first }}"
       nfs_export: "/export/nfs"
       nfs_client_mnt_point: "/mnt/nfs"
+  - include_role:
+      name: stackhpc.openhpc
+    vars:
+      openhpc_cluster_name: "jg"
+      openhpc_slurm_control_host: "{{ groups['login'] | first }}"
+      openhpc_enable:
+         control: "{{ inventory_hostname in groups['login'] }}"
+         batch: "{{ inventory_hostname in groups['compute'] }}"
+         runtime: true | bool
