@@ -24,37 +24,60 @@ import sys, json, pprint
 import openstack
 import pprint
 
-#if len(sys.argv) == 1: # using from terraform
-#    query = json.load(sys.stdin)
-#else:
-#    query = dict(zip(('cloud', 'resource_class', 'cluster', 'value', 'num_nodes'), sys.argv[1:]))
-#    pprint.pprint(query)
+from ClusterShell import NodeSet
 
-#num_nodes = int(query['num_nodes'])
 
-def find_baremetal_uuids(conn, names):
-    resource_class = "COMPUTE_A"
-    nodes = list(conn.baremetal.nodes(resource_class=resource_class))
+def get_config():
+    config = {}
+    if len(sys.argv) == 1:
+        # using from terraform
+        config = json.load(sys.stdin)
+        config["debug"] = False
+    else:
+        config = dict(
+           zip(('os_cloud', 'hostname_pattern', 'cluster_name'),
+               sys.argv[1:]))
+        config["debug"] = True
+        pprint.pprint(config)
+
+
+def get_hostnames(host_pattern):
+    return list(NodeSet.NodeSet(host_pattern))
+
+
+def find_baremetal_nodes(conn, hostnames):
     found = []
+
+    nodes = conn.baremetal.nodes()
     for node in nodes:
         if node.name in hostnames:
-            # pprint.pprint(node)
             found.append({
                "uuid": node["id"],
                "name": node["name"],
                "instance_uuid": node["instance_id"],
             })
-    # pprint.pprint(found)
+
+    if len(found) != len(hostnames):
+        print(found)
+        print(hostnames)
+        raise Exception("Unable to find all baremetal nodes")
+
     return found
 
-conn = openstack.connection.from_config(cloud="p3")
-hostnames = ["sv-b17-u37"]
-found = find_baremetal_uuids(conn, hostnames)
 
-result = {}
-for node in found:
-    result[node["name"]] = node["uuid"]
-print(json.dumps(result))
+def print_result(nodes):
+    result = {}
+    for node in nodes:
+        result[node["name"]] = node["uuid"]
+    print(json.dumps(result))
+
+
+config = get_config()
+conn = openstack.connection.from_config(cloud=config["os_cloud"])
+#hostpattern = "sv-b17-u37"
+found = find_baremetal_nodes(conn, get_hostnames(config["hostname_pattern"]))
+print_result(found)
+
 exit(0)
 
 free_nodes = []

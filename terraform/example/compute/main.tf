@@ -19,4 +19,5 @@ module "ironic_compute" {
   flavor_name = local.config.compute.flavor_name
   key_pair = local.config.compute.key_pair
   networks = local.config.compute.networks
+  hostname_pattern = local.config.compute.hostname_pattern
 }

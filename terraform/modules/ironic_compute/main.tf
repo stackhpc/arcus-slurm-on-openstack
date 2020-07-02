@@ -22,7 +22,7 @@ resource "openstack_compute_instance_v2" "compute" {
   flavor_name = var.flavor_name
   key_pair = var.key_pair
   config_drive = true
-  availability_zone = "nova::${each.value}" # TODO: availability zone should probably be from config too?s
+  availability_zone = "${var.availability_zone}::${each.value}" # TODO: availability zone should probably be from config too?s
 
   dynamic "network" {
     for_each = var.networks
@@ -40,9 +40,6 @@ resource "openstack_compute_instance_v2" "compute" {
 # TODO: needs fixing for case where creation partially fails resulting in "compute.network is empty list of object"
 resource "local_file" "hosts" {
   content  = templatefile("${path.module}/inventory_compute.tpl",
-                          {
-                            "computes":openstack_compute_instance_v2.compute,
-                          },
-                          )
-  filename = "${path.module}/../inventory/compute"
+                          {"computes": openstack_compute_instance_v2.compute})
+  filename = "var.inventory_location"
 }

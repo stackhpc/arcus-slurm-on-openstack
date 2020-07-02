@@ -11,3 +11,5 @@ compute:
     key_pair: "usual"
     networks:
      - "ilab"
+    hostname_pattern: "sv-b17-u37"
+

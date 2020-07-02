@@ -32,12 +32,23 @@ variable "networks" {
   type = list(string)
 }
 
+variable "hostname_pattern" {
+  description = "Hostname pattern for all computes"
+  type = string
+}
+
 #
 # Optional Parameters
 #
 
-variable "public_key_file" {
-  description = "Location of public_key_file"
-  type        = string
-  default     = "~/.ssh/id_rsa.pub"
+variable "inventory_location" {
+   description = "location of generated inventory"
+   type = string
+   default = "../inventory/compute"
+}
+
+variable "availability_zone" {
+  description = "OpenStack AZ name"
+  type = string
+  default = "nova"
 }
