@@ -1,7 +1,13 @@
 [baremetal_compute]
 
+[vm_compute]
+
 [computes:children]
 baremetal_compute
+vm_compute
 
-[jg_batch:children]
-computes
+[jg_baremetal:children]
+baremetal_compute
+
+[jg_vm:children]
+vm_compute
