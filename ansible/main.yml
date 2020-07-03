@@ -27,7 +27,36 @@
          control: "{{ inventory_hostname in groups['login'] }}"
          batch: "{{ inventory_hostname in groups['computes'] }}"
          runtime: true
-- hosts: all
+- hosts: login
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Copy across local clouds.yaml
+      copy:
+        src: clouds.yaml
+        dest: /mnt/nfs/clouds.yaml
+        owner: root
+        group: root
+        mode: '0400'
+- hosts: computes
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Create a directory if it does not exist
+      file:
+        path: /etc/openstack
+        state: directory
+        owner: root
+        group: root
+        mode: '0700'
+    - name: link clouds.yaml from nfs
+      file:
+        src: /mnt/nfs/clouds.yaml
+        dest: /etc/openstack/clouds.yaml
+        owner: root
+        group: root
+        state: link
+- hosts: computes
   gather_facts: false
   become: true
   vars:
