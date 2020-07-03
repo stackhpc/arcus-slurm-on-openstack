@@ -47,6 +47,12 @@ variable "inventory_location" {
    default = "../inventory/controller"
 }
 
+variable "inventory_groupname" {
+   description = "inventory groupname"
+   type = string
+   default = "login"
+}
+
 variable "availability_zone" {
   description = "OpenStack AZ name"
   type = string

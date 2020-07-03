@@ -31,10 +31,10 @@ resource "openstack_compute_instance_v2" "vms" {
   }
 }
 
-# TODO: probably needs fixing for multiple control/login nodes
 # TODO: needs fixing for case where creation partially fails resulting in "compute.network is empty list of object"
 resource "local_file" "hosts" {
   content  = templatefile("${path.module}/inventory.tpl",
-                          {"logins": openstack_compute_instance_v2.vms})
+                          {"servers": openstack_compute_instance_v2.vms,
+                           "groupname": var.inventory_groupname})
   filename = var.inventory_location
 }
