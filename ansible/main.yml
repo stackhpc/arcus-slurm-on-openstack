@@ -27,3 +27,32 @@
          control: "{{ inventory_hostname in groups['login'] }}"
          batch: "{{ inventory_hostname in groups['computes'] }}"
          runtime: true
+- hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: install python3
+      yum:
+        name: python3
+    - name: create venv
+      command: python3 -m venv /opt/slurm-tools
+      args:
+        creates: /opt/slurm-tools
+    - name: install slurm-openstack-tools
+      shell: |
+        source /opt/slurm-tools/bin/activate
+        pip install --upgrade pip
+        pip install git+https://github.com/stackhpc/slurm-openstack-tools.git
+      args:
+        creates: /opt/slurm-tools/bin/slurm-openstack-rebuild
+    - name: add RebootProgram to slurm.conf
+      lineinfile:
+        path: "{{ openhpc_slurm_conf.location }}"
+        regexp: "^RebootProgram=.*$"
+        line: "RebootProgram=/opt/slurm-tools/bin/slurm-openstack-rebuild"
+      register: slurm_conf
+    - name: reconfigure slurm
+      shell:
+        cmd: "scontrol reconfigure"
+      when: slurm_conf.changed
+      run_once: true
