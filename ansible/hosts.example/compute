@@ -1,0 +1,2 @@
+[computes]
+jg-sv-b17-u37 ansible_host=10.60.253.43 server_networks='{"ilab":["10.60.253.43"]}'

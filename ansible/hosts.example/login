@@ -1,0 +1,2 @@
+[login]
+jg-login-0 ansible_host=10.60.253.31 server_networks='{"ilab":["10.60.253.31"]}'
