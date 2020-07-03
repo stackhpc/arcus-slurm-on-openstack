@@ -1,4 +1,7 @@
-[computes]
+[baremetal_compute]
+
+[computes:children]
+baremetal_compute
 
 [jg_batch:children]
 computes

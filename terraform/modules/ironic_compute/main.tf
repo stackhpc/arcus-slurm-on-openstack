@@ -40,6 +40,7 @@ resource "openstack_compute_instance_v2" "compute" {
 # TODO: needs fixing for case where creation partially fails resulting in "compute.network is empty list of object"
 resource "local_file" "hosts" {
   content  = templatefile("${path.module}/inventory_compute.tpl",
-                          {"computes": openstack_compute_instance_v2.compute})
+                          {"computes": openstack_compute_instance_v2.compute,
+                           "groupname": var.inventory_groupname})
   filename = var.inventory_location
 }

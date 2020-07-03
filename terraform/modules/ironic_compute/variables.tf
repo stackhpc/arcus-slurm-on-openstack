@@ -44,7 +44,13 @@ variable "hostname_pattern" {
 variable "inventory_location" {
    description = "location of generated inventory"
    type = string
-   default = "../inventory/compute"
+   default = "../inventory/baremetal_compute"
+}
+
+variable "inventory_groupname" {
+   description = "name of the group in the inventory"
+   type = string
+   default = "baremetal_compute"
 }
 
 variable "availability_zone" {
