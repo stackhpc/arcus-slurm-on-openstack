@@ -3,3 +3,5 @@
   version: jg-actions
   name: stackhpc.openhpc
 - src: stackhpc.nfs
+# For image build:
+- src: stackhpc.os-images
