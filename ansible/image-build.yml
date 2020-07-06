@@ -6,7 +6,7 @@
       os_images_venv: ~/venv-os-images
       os_images_git_elements:
         - repo: "https://github.com/stackhpc/stackhpc-image-elements.git"
-          local: ~/dib-elements
+          local: "{{ '~/dib-elements' | expanduser }}"
           version: "feature/ansible"
           elements_path: elements
       os_images_list:
