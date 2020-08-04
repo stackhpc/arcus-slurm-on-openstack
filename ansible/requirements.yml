@@ -3,3 +3,4 @@
   version: jg-actions
   name: stackhpc.openhpc
 - src: stackhpc.nfs
+- src: stackhpc.ofed
