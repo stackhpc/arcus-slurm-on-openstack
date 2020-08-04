@@ -1,0 +1,31 @@
+---
+- name: Generate guest image and upload
+  hosts: localhost
+  roles:
+    - role: stackhpc.os-images
+      os_images_venv: ~/venv-os-images
+      os_images_git_elements:
+        - repo: "https://github.com/stackhpc/stackhpc-image-elements.git"
+          local: "{{ '~/dib-elements' | expanduser }}"
+          version: "feature/ansible"
+          elements_path: elements
+      os_images_list:
+       - name: arcus-openhpc
+         elements:
+           - "centos7"
+           - "epel"
+           - "ansible"
+           - "selinux-permissive"
+           - "dhcp-all-interfaces"
+           - "vm"
+         env:
+           DIB_ANSIBLE_OPENHPC_SRC: "https://github.com/JohnGarbutt/arcus-slurm-on-openstack"
+           DIB_ANSIBLE_OPENHPC_SUBDIR: ansible
+           DIB_ANSIBLE_OPENHPC_OPTS: "-i hosts.example -e buildgroup=computes"
+           # Increase the image size to allow sufficent space to install OFED.
+           DIB_IMAGE_EXTRA_SIZE: 2048 # MBs
+         properties:
+           os_distro: "centos"
+           os_version: "7.8"
+         type: qcow2
+         force_rebuild: false
