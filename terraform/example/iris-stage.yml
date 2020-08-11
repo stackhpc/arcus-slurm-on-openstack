@@ -1,0 +1,26 @@
+os_cloud: arcus # name in clouds.yaml
+
+cluster_name: "bk"
+
+compute:
+    image_name: "arcus-openhpc"
+    flavor_name: "bm.arcus"
+    key_pair: "bharat"
+    networks:
+     - "provider-318"
+    hostname_pattern: "svn4-dr06-u25,svn3-dr06-u22,svn4-dr06-u23,svn3-dr06-u10,svn3-dr06-u12,svn1-dr06-u32,svn1-dr06-u26,svn3-dr06-u14,svn4-dr06-u31,svn4-dr06-u11,svn1-dr06-u10,svn4-dr06-u9,svn1-dr06-u8,svn3-dr06-u2,svn3-dr06-u8,svn3-dr06-u28,svn2-dr06-u7,svn1-dr06-u6,svn2-dr06-u31,svn1-dr06-u22,svn1-dr06-u30,svn2-dr06-u3,svn4-dr06-u29,svn1-dr06-u12,svn3-dr06-u6,svn3-dr06-u30,svn3-dr06-u34,svn4-dr06-u3,svn2-dr06-u29,svn1-dr06-u4,svn4-dr06-u27,svn2-dr06-u27,svn1-dr06-u28,svn4-dr06-u33,svn4-dr06-u21,svn2-dr06-u21,svn2-dr06-u5,svn4-dr06-u5,svn2-dr06-u9,svn1-dr06-u24,svn3-dr06-u26,svn1-dr06-u2,svn4-dr06-u7,svn4-dr06-u13,svn3-dr06-u4,svn2-dr06-u33,svn1-dr06-u14"
+    #hostname_pattern: "svn4-dr06-u25,svn3-dr06-u22,svn4-dr06-u23,svn3-dr06-u10,svn3-dr06-u12,svn1-dr06-u32,svn1-dr06-u26,svn3-dr06-u14,svn4-dr06-u31,svn4-dr06-u11,svn1-dr06-u10,svn4-dr06-u9,svn1-dr06-u8,svn3-dr06-u2,svn3-dr06-u8,svn3-dr06-u28,svn2-dr06-u7,svn1-dr06-u6,svn2-dr06-u31,svn1-dr06-u22,svn1-dr06-u30,svn2-dr06-u3,svn4-dr06-u29,svn1-dr06-u12,svn3-dr06-u6,svn3-dr06-u30,svn3-dr06-u34,svn4-dr06-u3,svn2-dr06-u29,svn1-dr06-u4,svn4-dr06-u27,svn2-dr06-u27,svn1-dr06-u28,svn4-dr06-u33,svn4-dr06-u21,svn2-dr06-u21,svn2-dr06-u5,svn4-dr06-u5"
+    hostname_prefix: "bk-"
+
+controller:
+    vm_count: 1
+    hostname_prefix: "bk-login-"
+    image_name: "arcus-openhpc"
+    flavor_name: "general.v1.tiny"
+    key_pair: "bharat"
+    networks:
+     - "provider-318"
+    #TODO: fip: 128.232.224.84
+
+# added to group vars:
+#ansible_ssh_common_args: '-o ControlMaster=auto -o ControlPersist=240s -o ProxyCommand="ssh centos@128.232.224.84 -W %h:%p"'
