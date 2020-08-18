@@ -2,6 +2,8 @@
 - src: https://github.com/stackhpc/ansible-role-openhpc
   version: jg-actions
   name: stackhpc.openhpc
-- src: stackhpc.nfs
+- src: https://github.com/stackhpc/ansible-role-cluster-nfs
+  version: unmount
+  name: stackhpc.nfs
 - src: stackhpc.os-images
 - src: stackhpc.ofed
